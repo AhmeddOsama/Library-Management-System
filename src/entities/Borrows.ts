@@ -21,4 +21,7 @@ export class Borrows {
 
     @Column({ nullable: false })
     due_date!: Date;
+
+    @Column({ default: false })
+    returned!: boolean;
 }
