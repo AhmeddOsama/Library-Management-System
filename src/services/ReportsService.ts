@@ -37,44 +37,5 @@ export class ReportService {
         return borrows
     }
 
-    async exportBorrowingDataToCSV(filePath: string): Promise<void> {
-        const borrows = await this.borrowsRepository.find();
 
-        const csvStream = fs.createWriteStream(filePath);
-        csvStream.write('Borrower Name,Book Title,Checkout Date,Due Date,Returned\n');
-
-        borrows.forEach((borrow) => {
-            const rowData = `${borrow.borrower.name},${borrow.book.title},${borrow.checkout_date},${borrow.due_date},${borrow.returned}\n`;
-            csvStream.write(rowData);
-        });
-
-        csvStream.end();
-    }
-
-    async exportBorrowingDataToXlsx(filePath: string): Promise<void> {
-        const borrows = await this.borrowsRepository.find();
-
-        const workbook = new excel.Workbook();
-        const worksheet = workbook.addWorksheet('Borrowing Data');
-
-        worksheet.columns = [
-            { header: 'Borrower Name', key: 'borrowerName', width: 20 },
-            { header: 'Book Title', key: 'bookTitle', width: 30 },
-            { header: 'Checkout Date', key: 'checkoutDate', width: 15 },
-            { header: 'Due Date', key: 'dueDate', width: 15 },
-            { header: 'Returned', key: 'returned', width: 10 },
-        ];
-
-        borrows.forEach((borrow) => {
-            worksheet.addRow({
-                borrowerName: borrow.borrower.name,
-                bookTitle: borrow.book.title,
-                checkoutDate: borrow.checkout_date.toISOString(),
-                dueDate: borrow.due_date.toISOString(),
-                returned: borrow.returned.toString(),
-            });
-        });
-
-        await workbook.xlsx.writeFile(filePath);
-    }
 }
