@@ -7,6 +7,7 @@ const router = express.Router();
 
 
 router.get('/analyse-borrow-count', reportsController.generateAnalyticalReport.bind(reportsController));
+router.get('/last-month-borrows', reportsController.exportLastMonthBorrows.bind(reportsController));
 
 
 export default router;
