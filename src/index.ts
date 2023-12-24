@@ -2,7 +2,9 @@ import express from 'express';
 import mainRouter from './api/routes/mainRouter';
 import { dataSource } from '../dataSources'
 import morgan from 'morgan';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 dataSource.initialize()
     .then(() => {
         const app = express();

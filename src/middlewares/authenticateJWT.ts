@@ -5,13 +5,14 @@ import jwt from 'jsonwebtoken';
 const jwtSecret = 'temp-secret';
 
 const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
-    const header = req.header('Authorization');
-    if (!header) {
+    const token = req.header('Authorization')?.split(' ')[1];
+
+    if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    const token = header.split(' ')[1]
 
-    jwt.verify(token, jwtSecret, (err: any, user: any) => {
+    jwt.verify(token, jwtSecret, (err: any, email: any) => {
+        console.log('email', email)
         if (err) {
             return res.status(403).json({ message: 'Forbidden' });
         }

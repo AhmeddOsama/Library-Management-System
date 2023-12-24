@@ -4,6 +4,7 @@ import { dataSource } from '../../dataSources';
 import { Borrower } from '../entities/Borrower';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
 
 interface LoginBody {
     email: string,
@@ -32,7 +33,7 @@ export class AuthService {
         }
 
 
-        const token = jwt.sign({ email }, "temp-secret", { expiresIn: '1h', algorithm: 'HS256' }); //key should be in a .env file
+        const token = jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: '1h', algorithm: 'HS256' }); //key should be in a .env file
         return token
     };
 }
