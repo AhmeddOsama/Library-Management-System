@@ -21,16 +21,22 @@ export class ReportService {
         this.borrowsRepository = dataSource.getRepository(Borrows);
     }
 
-    async generateAnalyticalReport(filters: ReportFilters): Promise<Borrows[]> {
+    async generateAnalyticalReport(filters: ReportFilters): Promise<any> {
 
-        const borrows = await this.borrowsRepository.find({
-            where: {
-                due_date: Between(filters.startDate, filters.endDate),
-            },
-            relations: ['borrower', 'book'],
-        });
+        const borrows = await this.borrowsRepository
+            .createQueryBuilder('borrows')
+            .select(['book.title', 'COUNT(borrows.id) as borrow_count'])
+            .leftJoin('borrows.book', 'book')
+            .where(`borrows.checkout_date BETWEEN :startDate AND :endDate`, {
+                startDate: filters.startDate,
+                endDate: filters.endDate,
+            })
+            .groupBy('book.title')
+            .getRawMany();
+
         return borrows
     }
+
 
     async exportLastMonthBorrows(overdue: boolean): Promise<Borrows[]> {
         const lastMonthStartDate = new Date();

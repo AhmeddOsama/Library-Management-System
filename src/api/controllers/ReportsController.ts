@@ -4,6 +4,7 @@ import { ReportService } from '../../services/ReportsService';
 import { validateBody } from '../../decorators/validateRequestBody'
 import Joi from 'joi'
 import { convertToFormat } from '../../utils/utils';
+import * as moment from 'moment';
 
 const generateAnalyticalReportBody = Joi.object({
     startDate: Joi.date().required(),
@@ -22,11 +23,29 @@ export class ReportsController {
         this.reportsService = new ReportService();
     }
 
-    @validateBody(generateAnalyticalReportBody)
     async generateAnalyticalReport(req: Request, res: Response) {
         try {
-            const borrows = await this.reportsService.generateAnalyticalReport(req.body);
-            const report = await convertToFormat(borrows, req.body.filetype, res)
+            const { startDate, endDate, filetype } = req.query
+
+            if (filetype !== 'csv' && filetype !== 'xlsx') {
+                return res.status(400).json({ error: 'Invalid query parameters' });
+
+            }
+            const parsedStartDate = new Date(startDate as string)
+            const parsedEndDate = new Date(endDate as string)
+
+
+            if (isNaN(parsedStartDate.getTime()) || isNaN(parsedEndDate.getTime())) {
+                return res.status(400).json({ error: 'Invalid query parameters' });
+            }
+
+            const validFiletype = filetype as 'csv' | 'xlsx';
+
+            const borrows = await this.reportsService.generateAnalyticalReport({ startDate: parsedStartDate, endDate: parsedEndDate });
+            if (borrows.length == 0) {
+                return res.status(404).json({ message: "No Borrows" })
+            }
+            const report = await convertToFormat(borrows, validFiletype, res)
 
             res.status(201).send(report);
         } catch (error: any) {
@@ -34,15 +53,22 @@ export class ReportsController {
         }
     }
 
-    @validateBody(filetype)
     async exportLastMonthBorrows(req: Request, res: Response) {
         try {
-            const borrows = await this.reportsService.exportLastMonthBorrows(req.body.overdue);
+            const { filetype, overdue } = req.query
+            if (filetype !== 'csv' && filetype !== 'xlsx') {
+                return res.status(400).json({ error: 'Invalid query parameters' });
+
+            }
+            const isOverdue = overdue === 'true';
+            const validFiletype = filetype as 'csv' | 'xlsx';
+
+            const borrows = await this.reportsService.exportLastMonthBorrows(isOverdue);
             if (borrows.length == 0) {
                 res.status(404).json({ message: "No Borrows" })
             }
             else {
-                const report = await convertToFormat(borrows, req.body.filetype, res)
+                const report = await convertToFormat(borrows, validFiletype, res)
                 res.status(201).send(report);
             }
 
