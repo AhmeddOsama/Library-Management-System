@@ -5,16 +5,17 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique, PrimaryColumn } from 't
 @Unique(['isbn'])
 export class Book {
 
-    @Column()
+    @Column({ nullable: false })
     title!: string;
 
-    @Column()
+    @Column({ nullable: false })
     author!: string;
 
+    @Column({ nullable: false })
     @PrimaryColumn()
     isbn!: string;
 
-    @Column()
+    @Column({ default: 0 })
     quantity!: number;
 
     @Column({ nullable: true })

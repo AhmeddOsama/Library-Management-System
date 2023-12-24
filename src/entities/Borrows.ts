@@ -1,5 +1,5 @@
 // src/entities/Borrows.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Book } from './Book';
 import { Borrower } from './Borrower';
 
@@ -16,10 +16,12 @@ export class Borrows {
     @JoinColumn({ name: 'borrower_id' })
     borrower!: Borrower;
 
-    @Column()
+    @Column({ nullable: false })
+    @Index()
     checkout_date!: Date;
 
     @Column({ nullable: false })
+    @Index()
     due_date!: Date;
 
     @Column({ default: false })
