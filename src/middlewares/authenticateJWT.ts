@@ -12,7 +12,7 @@ const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
     }
 
     jwt.verify(token, jwtSecret, (err: any, email: any) => {
-        console.log('email', email)
+        // console.log('email', email)
         if (err) {
             return res.status(403).json({ message: 'Forbidden' });
         }

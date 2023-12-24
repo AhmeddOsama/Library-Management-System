@@ -20,6 +20,7 @@ export const validateBody = (schema: Schema) => {
             const validationError = validateRequest(schema, req.body);
             if (validationError) {
                 res.status(400).json({ message: validationError });
+                return
             }
 
             //calling the original method

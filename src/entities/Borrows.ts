@@ -9,7 +9,7 @@ export class Borrows {
     id!: number;
 
     @ManyToOne(() => Book)
-    @JoinColumn({ name: 'isbn' })
+    @JoinColumn({ name: 'isbn', referencedColumnName: 'isbn' })
     book!: Book;
 
     @ManyToOne(() => Borrower)
