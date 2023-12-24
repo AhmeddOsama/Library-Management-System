@@ -13,6 +13,9 @@ export class Borrower {
     @Column()
     email!: string;
 
+    @Column()
+    password!: string;
+
     @CreateDateColumn()
     registered_date!: Date;
 }

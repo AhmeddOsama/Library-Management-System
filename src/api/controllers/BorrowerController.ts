@@ -1,6 +1,17 @@
 import { Request, Response } from 'express';
 import { BorrowerService } from '../../services/BorrowerService';
+import Joi from 'joi';
+import { validateBody } from '../../decorators/validateRequestBody'
 
+const createBorrowerBody = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(), // Include password validation here
+})
+const updateBorrowerBody = Joi.object({
+    name: Joi.string().optional,
+    email: Joi.string().email().required(),
+})
 export class BorrowerController {
     private readonly borrowerService: BorrowerService;
 
@@ -8,6 +19,7 @@ export class BorrowerController {
         this.borrowerService = new BorrowerService();
     }
 
+    @validateBody(createBorrowerBody)
     async createBorrower(req: Request, res: Response) {
         try {
             const Borrower = await this.borrowerService.createBorrower(req.body);
@@ -17,7 +29,7 @@ export class BorrowerController {
         }
     }
 
-
+    @validateBody(updateBorrowerBody)
     async updateBorrower(req: Request, res: Response) {
         try {
             const Borrower = await this.borrowerService.updateBorrower(req.params.isbn, req.body);
