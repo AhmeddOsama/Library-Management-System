@@ -1,6 +1,16 @@
 // borrowsController.ts
 import { Request, Response } from 'express';
 import { BorrowsService } from '../../services/BorrowsService';
+import { validateBody } from '../../decorators/validateRequestBody'
+import Joi from 'joi'
+
+const createBorrowBody = Joi.object({
+    checkoutDate: Joi.date().required(),
+    dueDate: Joi.date().required(),
+    email: Joi.string().email().required(),
+    isbn: Joi.string().required(),
+
+})
 
 export class BorrowsController {
     private readonly borrowsService: BorrowsService;
@@ -9,6 +19,7 @@ export class BorrowsController {
         this.borrowsService = new BorrowsService();
     }
 
+    @validateBody(createBorrowBody)
     async createBorrow(req: Request, res: Response) {
         try {
             const borrow = await this.borrowsService.createBorrow(req.body);
@@ -46,7 +57,6 @@ export class BorrowsController {
     async searchBorrows(req: Request, res: Response) {
         try {
             const { isbn, email, checkoutDate, dueDate } = req.query;
-            console.log(req.query)
             const borrows = await this.borrowsService.searchBorrows(
                 {
                     isbn: isbn as string | undefined,
