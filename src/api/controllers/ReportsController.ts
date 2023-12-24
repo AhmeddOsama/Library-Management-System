@@ -30,7 +30,7 @@ export class ReportsController {
 
             res.status(201).send(report);
         } catch (error: any) {
-            res.status(400).json({ message: error.message });
+            res.status(500).json({ message: "Internal Server Error" });
         }
     }
 
@@ -39,7 +39,7 @@ export class ReportsController {
         try {
             const borrows = await this.reportsService.exportLastMonthBorrows(req.body.overdue);
             if (borrows.length == 0) {
-                res.status(201).json({ message: "No Borrows" })
+                res.status(404).json({ message: "No Borrows" })
             }
             else {
                 const report = await convertToFormat(borrows, req.body.filetype, res)
@@ -47,7 +47,7 @@ export class ReportsController {
             }
 
         } catch (error: any) {
-            res.status(400).json({ message: error.message });
+            res.status(500).json({ message: "Internal Server Error" });
         }
     }
 }
