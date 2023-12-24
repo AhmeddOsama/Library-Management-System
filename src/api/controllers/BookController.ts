@@ -58,7 +58,7 @@ export class BookController {
             const books = await this.bookService.searchBook(req.query);
             res.status(200).json(books);
         } catch (error: any) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: "Internal Server Error" });
         }
     }
 }

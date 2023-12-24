@@ -19,7 +19,7 @@ export const validateBody = (schema: Schema) => {
             // console.log('helloo')
             const validationError = validateRequest(schema, req.body);
             if (validationError) {
-                res.status(400).json({ message: validationError });
+                res.status(403).json({ message: validationError });
                 return
             }
 

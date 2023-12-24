@@ -23,7 +23,10 @@ export class BorrowerController {
     async createBorrower(req: Request, res: Response) {
         try {
             const Borrower = await this.borrowerService.createBorrower(req.body);
-            res.status(201).json(Borrower);
+            res.status(201).json({
+                message: "Borrower created successfully",
+                data: Borrower,
+            });
         } catch (error: any) {
             res.status(400).json({ message: error.message });
         }
@@ -33,18 +36,21 @@ export class BorrowerController {
     async updateBorrower(req: Request, res: Response) {
         try {
             const Borrower = await this.borrowerService.updateBorrower(req.params.isbn, req.body);
-            res.status(200).json(Borrower);
+            res.status(200).json({
+                message: "Borrower updated successfully",
+                data: Borrower,
+            });
         } catch (error: any) {
-            res.status(404).json({ message: error.message });
+            res.status(404).json({ message: 'Not Found' });
         }
     }
 
     async deleteBorrower(req: Request, res: Response) {
         try {
             await this.borrowerService.deleteBorrower(req.params.isbn);
-            res.status(204).send();
+            res.status(204).json({ message: 'Borrower deleted successfully' });
         } catch (error: any) {
-            res.status(404).json({ message: error.message });
+            res.status(404).json({ message: 'Not Found' });
         }
     }
 
@@ -53,7 +59,7 @@ export class BorrowerController {
             const Borrowers = await this.borrowerService.searchBorrower(req.query);
             res.status(200).json(Borrowers);
         } catch (error: any) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: " Internal Server Error" });
         }
     }
 }

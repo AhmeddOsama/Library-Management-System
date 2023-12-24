@@ -25,7 +25,7 @@ export class BorrowsController {
             const borrow = await this.borrowsService.createBorrow(req.body);
             res.status(201).json(borrow);
         } catch (error: any) {
-            res.status(400).json({ message: error.message });
+            res.status(500).json({  message: "Internal Server Error"  });
         }
     }
 
@@ -38,9 +38,15 @@ export class BorrowsController {
             }
 
             const borrow = await this.borrowsService.returnBorrow(borrowId);
-            res.status(200).json(borrow);
+            if (!borrow) {
+                res.status(404).json("Not Found");
+            }
+            else {
+                res.status(200).json(borrow);
+
+            }
         } catch (error: any) {
-            res.status(404).json({ message: error.message });
+            res.status(500).json({ message: "Internal Server Error" });
         }
     }
 
