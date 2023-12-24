@@ -16,6 +16,7 @@ interface BorrowFilters {
     user_email: string;
     checkoutDate?: Date;
     dueDate?: Date;
+    returned?: boolean
 }
 
 export class BorrowsService {

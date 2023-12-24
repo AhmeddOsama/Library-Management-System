@@ -56,13 +56,14 @@ export class BorrowsController {
 
     async searchBorrows(req: Request, res: Response) {
         try {
-            const { isbn, email, checkoutDate, dueDate } = req.query;
+            const { isbn, email, checkoutDate, dueDate, returned } = req.query;
             const borrows = await this.borrowsService.searchBorrows(
                 {
                     isbn: isbn as string | undefined,
                     user_email: email as string,
                     checkoutDate: checkoutDate as Date | undefined,
                     dueDate: dueDate as Date | undefined,
+                    returned: returned as boolean | undefined
                 });
             res.status(200).json(borrows);
         } catch (error: any) {
