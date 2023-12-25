@@ -10,7 +10,7 @@ The API documentation for the Library Management System can be found here : http
 
 ### Prerequisites
 
-- SQL Server running on port 3000
+- SQL Server running on port 3306
 
  ### Running the app
 - npm start
